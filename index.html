@@ -2,32 +2,63 @@
 <html>
 <head>
   <title>E-Companion Chatbot</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <main class="app">
-    <h1>E-Companion</h1>
 
-    <select id="persona">
-      <option>Mia</option>
-      <option>Leo</option>
-      <option>Sage</option>
-      <option>Arlo</option>
-    </select>
+    <section id="persona-screen">
+      <h1>Choose Your Companion</h1>
 
-    <div id="chat"></div>
+      <div class="persona-grid">
+        <button class="persona-card mia-card" data-persona="Mia">
+          <span class="avatar">🌸</span>
+          <h2>Mia</h2>
+          <p>Warm, playful, supportive</p>
+        </button>
 
-    <div class="chips">
-      <button>How was your day?</button>
-      <button>I need advice</button>
-      <button>Cheer me up</button>
-    </div>
+        <button class="persona-card leo-card" data-persona="Leo">
+          <span class="avatar">🔥</span>
+          <h2>Leo</h2>
+          <p>Confident, funny, encouraging</p>
+        </button>
 
-    <form id="form">
-      <input id="message" placeholder="Type a message..." autocomplete="off">
-      <button>Send</button>
-      <button id="clear" type="button">Clear Chat</button>
-    </form>
+        <button class="persona-card sage-card" data-persona="Sage">
+          <span class="avatar">🌿</span>
+          <h2>Sage</h2>
+          <p>Calm, thoughtful, wise</p>
+        </button>
+
+        <button class="persona-card arlo-card" data-persona="Arlo">
+          <span class="avatar">🎧</span>
+          <h2>Arlo</h2>
+          <p>Cozy, creative, gentle</p>
+        </button>
+      </div>
+    </section>
+
+    <section id="chat-screen" class="hidden">
+      <div class="chat-header">
+        <button id="back" type="button">← Change</button>
+        <h1 id="chat-title">E-Companion</h1>
+      </div>
+
+      <div id="chat"></div>
+
+      <div class="chips">
+        <button>How was your day?</button>
+        <button>I need advice</button>
+        <button>Cheer me up</button>
+      </div>
+
+      <form id="form">
+        <input id="message" placeholder="Type a message..." autocomplete="off">
+        <button>Send</button>
+        <button id="clear" type="button">Clear Chat</button>
+      </form>
+    </section>
+
   </main>
 
   <script src="app.js"></script>

@@ -1,11 +1,17 @@
 const chat = document.getElementById("chat");
 const form = document.getElementById("form");
 const input = document.getElementById("message");
-const personaSelect = document.getElementById("persona");
 const chips = document.querySelectorAll(".chips button");
 const clearButton = document.getElementById("clear");
 
-let history = JSON.parse(localStorage.getItem("chatHistory")) || [];
+const personaScreen = document.getElementById("persona-screen");
+const chatScreen = document.getElementById("chat-screen");
+const personaCards = document.querySelectorAll(".persona-card");
+const backButton = document.getElementById("back");
+const chatTitle = document.getElementById("chat-title");
+
+let selectedPersona = "Mia";
+let history = [];
 
 const personas = {
   Mia: {
@@ -49,14 +55,23 @@ const personas = {
   }
 };
 
-renderHistory();
-updateTheme();
-
-function getCurrentPersona() {
-  return personas[personaSelect.value];
+function getStorageKey() {
+  return `chatHistory_${selectedPersona}`;
 }
 
-function addMessage(role, content, personaName = personaSelect.value) {
+function loadHistory() {
+  history = JSON.parse(localStorage.getItem(getStorageKey())) || [];
+}
+
+function saveHistory() {
+  localStorage.setItem(getStorageKey(), JSON.stringify(history));
+}
+
+function getCurrentPersona() {
+  return personas[selectedPersona];
+}
+
+function addMessage(role, content, personaName = selectedPersona) {
   const message = {
     role,
     content,
@@ -64,27 +79,18 @@ function addMessage(role, content, personaName = personaSelect.value) {
   };
 
   history.push(message);
-
-  localStorage.setItem(
-    "chatHistory",
-    JSON.stringify(history)
-  );
-
+  saveHistory();
   addMessageToScreen(message);
 }
 
 function addMessageToScreen(message) {
   const div = document.createElement("div");
+  const persona = personas[message.persona] || personas.Mia;
 
-  const persona =
-    personas[message.persona] || personas.Mia;
-
-  div.className =
-    `message ${message.role} ${persona.className}`;
+  div.className = `message ${message.role} ${persona.className}`;
 
   if (message.role === "assistant") {
-    div.textContent =
-      `${persona.emoji} ${message.content}`;
+    div.textContent = `${persona.emoji} ${message.content}`;
   } else {
     div.textContent = message.content;
   }
@@ -103,9 +109,7 @@ function renderHistory() {
 
 function fakeBotReply() {
   const persona = getCurrentPersona();
-
-  const randomIndex =
-    Math.floor(Math.random() * persona.replies.length);
+  const randomIndex = Math.floor(Math.random() * persona.replies.length);
 
   return persona.replies[randomIndex];
 }
@@ -114,25 +118,17 @@ async function sendMessage(text) {
   addMessage("user", text);
 
   const typing = document.createElement("div");
-
   const persona = getCurrentPersona();
 
-  typing.className =
-    `message assistant ${persona.className}`;
-
-  typing.textContent =
-    `${persona.emoji} Typing...`;
+  typing.className = `message assistant ${persona.className}`;
+  typing.textContent = `${persona.emoji} Typing...`;
 
   chat.appendChild(typing);
   chat.scrollTop = chat.scrollHeight;
 
   setTimeout(() => {
     typing.remove();
-
-    addMessage(
-      "assistant",
-      fakeBotReply()
-    );
+    addMessage("assistant", fakeBotReply());
   }, 800);
 }
 
@@ -144,7 +140,6 @@ form.addEventListener("submit", event => {
   if (!text) return;
 
   input.value = "";
-
   sendMessage(text);
 });
 
@@ -154,24 +149,36 @@ chips.forEach(chip => {
   });
 });
 
-personaSelect.addEventListener(
-  "change",
-  updateTheme
-);
-
 clearButton.addEventListener("click", () => {
   history = [];
-
-  localStorage.removeItem("chatHistory");
-
+  localStorage.removeItem(getStorageKey());
   chat.innerHTML = "";
 
-  console.log("Chat cleared.");
+  console.log(`${selectedPersona}'s chat cleared.`);
+});
+
+personaCards.forEach(card => {
+  card.addEventListener("click", () => {
+    selectedPersona = card.dataset.persona;
+
+    loadHistory();
+    renderHistory();
+
+    personaScreen.classList.add("hidden");
+    chatScreen.classList.remove("hidden");
+
+    updateTheme();
+  });
+});
+
+backButton.addEventListener("click", () => {
+  chatScreen.classList.add("hidden");
+  personaScreen.classList.remove("hidden");
 });
 
 function updateTheme() {
   const persona = getCurrentPersona();
 
-  document.body.className =
-    persona.className;
+  document.body.className = persona.className;
+  chatTitle.textContent = `${persona.emoji} ${selectedPersona}`;
 }

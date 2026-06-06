@@ -1,87 +1,60 @@
-body {
-  font-family: Arial, sans-serif;
-  display: flex;
-  justify-content: center;
-  padding: 40px;
-  transition: background 0.3s;
+.hidden {
+  display: none;
 }
 
-body.mia {
-  background: #fce7f3;
+.persona-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
 }
 
-body.leo {
-  background: #fee2e2;
-}
-
-body.sage {
-  background: #dcfce7;
-}
-
-body.arlo {
-  background: #dbeafe;
-}
-
-.app {
-  width: 420px;
-  background: white;
+.persona-card {
+  border: none;
+  border-radius: 16px;
   padding: 20px;
-  border-radius: 18px;
-  box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+  text-align: left;
+  cursor: pointer;
+  transition: transform 0.2s;
 }
 
-#chat {
-  height: 420px;
-  overflow-y: auto;
-  border: 1px solid #ddd;
-  padding: 12px;
-  margin: 15px 0;
-  border-radius: 12px;
+.persona-card:hover {
+  transform: scale(1.03);
 }
 
-.message {
-  margin: 10px 0;
-  padding: 10px;
-  border-radius: 12px;
+.avatar {
+  font-size: 36px;
 }
 
-.user {
-  background: #e5e7eb;
-  text-align: right;
+.persona-card h2 {
+  margin: 8px 0 4px;
 }
 
-.assistant.mia {
+.persona-card p {
+  margin: 0;
+}
+
+.mia-card {
   background: #fbcfe8;
 }
 
-.assistant.leo {
+.leo-card {
   background: #fecaca;
 }
 
-.assistant.sage {
+.sage-card {
   background: #bbf7d0;
 }
 
-.assistant.arlo {
+.arlo-card {
   background: #bfdbfe;
 }
 
-form {
+.chat-header {
   display: flex;
-  gap: 8px;
+  align-items: center;
+  gap: 12px;
 }
 
-input {
-  flex: 1;
-  padding: 10px;
-}
-
-button, select {
-  padding: 10px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-}
-
-.chips button {
-  margin: 4px;
+#back {
+  background: #e5e7eb;
 }
