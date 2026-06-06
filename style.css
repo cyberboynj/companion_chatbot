@@ -1,9 +1,25 @@
 body {
   font-family: Arial, sans-serif;
-  background: #f7e9f1;
   display: flex;
   justify-content: center;
   padding: 40px;
+  transition: background 0.3s;
+}
+
+body.mia {
+  background: #fce7f3;
+}
+
+body.leo {
+  background: #fee2e2;
+}
+
+body.sage {
+  background: #dcfce7;
+}
+
+body.arlo {
+  background: #dbeafe;
 }
 
 .app {
@@ -30,12 +46,24 @@ body {
 }
 
 .user {
-  background: #dbeafe;
+  background: #e5e7eb;
   text-align: right;
 }
 
-.assistant {
-  background: #fce7f3;
+.assistant.mia {
+  background: #fbcfe8;
+}
+
+.assistant.leo {
+  background: #fecaca;
+}
+
+.assistant.sage {
+  background: #bbf7d0;
+}
+
+.assistant.arlo {
+  background: #bfdbfe;
 }
 
 form {
