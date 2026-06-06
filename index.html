@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>E-Companion Chatbot</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app">
+    <h1>E-Companion</h1>
+
+    <select id="persona">
+      <option>Mia</option>
+      <option>Leo</option>
+      <option>Sage</option>
+      <option>Arlo</option>
+    </select>
+
+    <div id="chat"></div>
+
+    <div class="chips">
+      <button>How was your day?</button>
+      <button>I need advice</button>
+      <button>Cheer me up</button>
+    </div>
+
+    <form id="form">
+      <input id="message" placeholder="Type a message..." autocomplete="off">
+      <button>Send</button>
+      <button id="clear" type="button">Clear Chat</button>
+    </form>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

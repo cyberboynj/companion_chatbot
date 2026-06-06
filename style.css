@@ -1,0 +1,59 @@
+body {
+  font-family: Arial, sans-serif;
+  background: #f7e9f1;
+  display: flex;
+  justify-content: center;
+  padding: 40px;
+}
+
+.app {
+  width: 420px;
+  background: white;
+  padding: 20px;
+  border-radius: 18px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+}
+
+#chat {
+  height: 420px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  padding: 12px;
+  margin: 15px 0;
+  border-radius: 12px;
+}
+
+.message {
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 12px;
+}
+
+.user {
+  background: #dbeafe;
+  text-align: right;
+}
+
+.assistant {
+  background: #fce7f3;
+}
+
+form {
+  display: flex;
+  gap: 8px;
+}
+
+input {
+  flex: 1;
+  padding: 10px;
+}
+
+button, select {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+.chips button {
+  margin: 4px;
+}
