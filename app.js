@@ -11,6 +11,7 @@ const backButton = document.getElementById("back");
 const chatTitle = document.getElementById("chat-title");
 const heroEmoji = document.getElementById("hero-emoji");
 const moodLabel = document.getElementById("mood-label");
+const statusLabel = document.getElementById("status-label");
 const toast = document.getElementById("toast");
 
 const profileDescription = document.getElementById("profile-description");
@@ -24,24 +25,28 @@ const personas = {
     emoji: "🌸",
     className: "mia",
     description: "Mia is warm, playful, and emotionally supportive.",
+    statuses: ["Online", "Thinking of you", "Feeling cozy", "Ready to listen"],
     replies: {}
   },
   Leo: {
     emoji: "🔥",
     className: "leo",
     description: "Leo is confident, funny, and motivating.",
+    statuses: ["Online", "Hyped", "Locked in", "Ready to cheer you on"],
     replies: {}
   },
   Sage: {
     emoji: "🌿",
     className: "sage",
     description: "Sage is calm, thoughtful, and wise.",
+    statuses: ["Online", "Reflecting", "Finding calm", "Ready to advise"],
     replies: {}
   },
   Arlo: {
     emoji: "🎧",
     className: "arlo",
     description: "Arlo is cozy, creative, and gentle.",
+    statuses: ["Online", "Listening to music", "Feeling soft", "Ready to unwind"],
     replies: {}
   }
 };
@@ -52,6 +57,10 @@ function getStorageKey() {
 
 function getStatsKey() {
   return `companionStats_${selectedPersona}`;
+}
+
+function getMemoryKey() {
+  return `longTermMemory_${selectedPersona}`;
 }
 
 function loadHistory() {
@@ -67,7 +76,8 @@ function loadStats() {
     affection: 0,
     messages: 0,
     unlockedAchievements: [],
-    lastLevel: 1
+    lastLevel: 1,
+    lastRank: "Acquaintance"
   };
 }
 
@@ -75,8 +85,78 @@ function saveStats(stats) {
   localStorage.setItem(getStatsKey(), JSON.stringify(stats));
 }
 
+function loadMemory() {
+  return JSON.parse(localStorage.getItem(getMemoryKey())) || [];
+}
+
+function saveMemory(memories) {
+  localStorage.setItem(getMemoryKey(), JSON.stringify(memories));
+}
+
+function addMemory(memoryText) {
+  const memories = loadMemory();
+
+  const cleanedMemory = memoryText.trim();
+
+  if (!cleanedMemory) return;
+
+  const alreadyExists = memories.some(memory =>
+    memory.toLowerCase() === cleanedMemory.toLowerCase()
+  );
+
+  if (alreadyExists) return;
+
+  memories.push(cleanedMemory);
+  saveMemory(memories);
+
+  showToast(`🧠 ${selectedPersona} remembered something new.`);
+}
+
+function detectMemory(text) {
+  const message = text.trim();
+  const lowerMessage = message.toLowerCase();
+
+  const memoryPatterns = [
+    "remember that ",
+    "remember this: ",
+    "my favorite ",
+    "i like ",
+    "i love ",
+    "i am learning ",
+    "i'm learning ",
+    "my goal is ",
+    "i want to become ",
+    "i want to be ",
+    "i live in ",
+    "i work as ",
+    "i study ",
+    "i'm studying "
+  ];
+
+  for (const pattern of memoryPatterns) {
+    const index = lowerMessage.indexOf(pattern);
+
+    if (index !== -1) {
+      const memory = message.slice(index).trim();
+
+      return memory.charAt(0).toUpperCase() + memory.slice(1);
+    }
+  }
+
+  return null;
+}
+
 function getLevel(affection) {
   return Math.floor(affection / 10) + 1;
+}
+
+function getRelationshipRank(affection) {
+  if (affection >= 100) return "Soulmate";
+  if (affection >= 75) return "Partner";
+  if (affection >= 50) return "Best Friend";
+  if (affection >= 25) return "Close Friend";
+  if (affection >= 10) return "Friend";
+  return "Acquaintance";
 }
 
 function getCurrentPersona() {
@@ -94,7 +174,7 @@ function showToast(message) {
   }, 3000);
 }
 
-function checkAchievements(stats) {
+function checkAchievements(stats, level, rank) {
   const achievements = [
     {
       id: "first_message",
@@ -102,19 +182,59 @@ function checkAchievements(stats) {
       message: `🏆 Achievement unlocked: First chat with ${selectedPersona}!`
     },
     {
+      id: "level_2",
+      condition: level >= 2,
+      message: `⭐ Achievement unlocked: ${selectedPersona} reached Level 2!`
+    },
+    {
+      id: "level_5",
+      condition: level >= 5,
+      message: `🌟 Achievement unlocked: ${selectedPersona} reached Level 5!`
+    },
+    {
       id: "ten_messages",
-      condition: stats.messages === 10,
+      condition: stats.messages >= 10,
       message: `🏆 Achievement unlocked: 10 messages with ${selectedPersona}!`
     },
     {
       id: "twenty_five_messages",
-      condition: stats.messages === 25,
+      condition: stats.messages >= 25,
       message: `🏆 Achievement unlocked: 25 messages with ${selectedPersona}!`
     },
     {
+      id: "fifty_messages",
+      condition: stats.messages >= 50,
+      message: `💬 Achievement unlocked: 50 messages with ${selectedPersona}!`
+    },
+    {
       id: "fifty_affection",
-      condition: stats.affection === 50,
+      condition: stats.affection >= 50,
       message: `💖 Achievement unlocked: ${selectedPersona} reached 50 affection!`
+    },
+    {
+      id: "rank_friend",
+      condition: rank === "Friend",
+      message: `🤝 Rank unlocked: ${selectedPersona} is now your Friend!`
+    },
+    {
+      id: "rank_close_friend",
+      condition: rank === "Close Friend",
+      message: `💛 Rank unlocked: ${selectedPersona} is now your Close Friend!`
+    },
+    {
+      id: "rank_best_friend",
+      condition: rank === "Best Friend",
+      message: `💖 Rank unlocked: ${selectedPersona} is now your Best Friend!`
+    },
+    {
+      id: "rank_partner",
+      condition: rank === "Partner",
+      message: `💕 Rank unlocked: ${selectedPersona} is now your Partner!`
+    },
+    {
+      id: "rank_soulmate",
+      condition: rank === "Soulmate",
+      message: `✨ Rank unlocked: ${selectedPersona} is now your Soulmate!`
     }
   ];
 
@@ -226,6 +346,14 @@ function updateMoodLabel(mood) {
   moodLabel.textContent = `Mood: ${moodText[mood] || "Listening"}`;
 }
 
+function updateStatusLabel() {
+  const persona = getCurrentPersona();
+  const statuses = persona.statuses;
+  const randomStatus = statuses[Math.floor(Math.random() * statuses.length)];
+
+  statusLabel.textContent = `Status: ${persona.emoji} ${randomStatus}`;
+}
+
 function showTypingIndicator(mood = "default") {
   const persona = getCurrentPersona();
 
@@ -283,8 +411,14 @@ function showTypingIndicator(mood = "default") {
 
 async function sendMessage(text) {
   const mood = detectMood(text);
+  const detectedMemory = detectMemory(text);
+
+  if (detectedMemory) {
+    addMemory(detectedMemory);
+  }
 
   updateMoodLabel(mood);
+  updateStatusLabel();
 
   addMessage("user", text);
 
@@ -298,7 +432,8 @@ async function sendMessage(text) {
       },
       body: JSON.stringify({
         persona: selectedPersona,
-        history: history
+        history: history,
+        memories: loadMemory()
       })
     });
 
@@ -324,19 +459,27 @@ async function sendMessage(text) {
 
 function increaseStats() {
   const stats = loadStats();
+
   const oldLevel = getLevel(stats.affection);
+  const oldRank = getRelationshipRank(stats.affection);
 
   stats.affection += 1;
   stats.messages += 1;
 
   const newLevel = getLevel(stats.affection);
+  const newRank = getRelationshipRank(stats.affection);
 
   if (newLevel > oldLevel) {
     stats.lastLevel = newLevel;
     showToast(`🎉 ${selectedPersona} reached Level ${newLevel}!`);
   }
 
-  checkAchievements(stats);
+  if (newRank !== oldRank) {
+    stats.lastRank = newRank;
+    showToast(`💫 Relationship upgraded: ${selectedPersona} is now your ${newRank}!`);
+  }
+
+  checkAchievements(stats, newLevel, newRank);
   saveStats(stats);
   updateProfile();
 }
@@ -345,11 +488,13 @@ function updateProfile() {
   const persona = getCurrentPersona();
   const stats = loadStats();
   const level = getLevel(stats.affection);
+  const rank = getRelationshipRank(stats.affection);
+  const memoryCount = loadMemory().length;
 
   profileDescription.textContent = persona.description;
 
   profileStats.textContent =
-    `Level ${level} Companion • Affection: ${stats.affection} • Messages: ${stats.messages}`;
+    `Level ${level} Companion • Rank: ${rank} • Affection: ${stats.affection} • Messages: ${stats.messages} • Memories: ${memoryCount}`;
 }
 
 function getDailyGreeting() {
@@ -433,4 +578,5 @@ function updateTheme() {
   heroEmoji.textContent = persona.emoji;
 
   updateMoodLabel("default");
+  updateStatusLabel();
 }
