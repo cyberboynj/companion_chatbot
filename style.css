@@ -621,6 +621,77 @@ button:active {
   text-align: center;
 }
 
+/* =========================
+   MEMORY MANAGEMENT (v1.1)
+========================= */
+
+.memory-header {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.memory-header button {
+  flex: 1;
+}
+
+#clear-memories {
+  background: rgba(255,255,255,0.82);
+  border: 1px solid rgba(255,255,255,0.75);
+}
+
+.memory-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.memory-item span {
+  flex: 1;
+  word-break: break-word;
+}
+
+.delete-memory {
+  flex-shrink: 0;
+  padding: 6px 10px;
+  font-size: 12px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.85);
+}
+
+body.mia .delete-memory:hover {
+  background: #fbcfe8;
+}
+
+body.leo .delete-memory:hover {
+  background: #fecaca;
+}
+
+body.sage .delete-memory:hover {
+  background: #bbf7d0;
+}
+
+body.arlo .delete-memory:hover {
+  background: #bfdbfe;
+}
+
+#clear-memories:hover {
+  background: rgba(239,68,68,0.12);
+  border-color: rgba(239,68,68,0.25);
+}
+
+.memory-item {
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.memory-item:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.08);
+}
+
 /* Persona accents */
 
 body.mia .memory-item {
@@ -728,4 +799,142 @@ body.arlo #hero-avatar,
   form button {
     width: 100%;
   }
+}
+
+/* =========================
+   DARK MODE
+========================= */
+
+body.dark-mode {
+  background:
+    radial-gradient(circle at top left, rgba(255,255,255,0.08), transparent 35%),
+    linear-gradient(135deg, #111827, #1f2937, #0f172a);
+  color: #f9fafb;
+}
+
+body.dark-mode::before {
+  background: #7c3aed;
+  opacity: 0.22;
+}
+
+body.dark-mode::after {
+  background: #2563eb;
+  opacity: 0.22;
+}
+
+body.dark-mode #persona-screen h1,
+body.dark-mode .companion-hero h1 {
+  color: #f9fafb;
+}
+
+body.dark-mode .persona-card,
+body.dark-mode #chat-screen,
+body.dark-mode .companion-hero,
+body.dark-mode #profile-card,
+body.dark-mode #chat,
+body.dark-mode form,
+body.dark-mode #memory-panel,
+body.dark-mode #memory-list {
+  background: rgba(17,24,39,0.68);
+  border-color: rgba(255,255,255,0.14);
+  color: #f9fafb;
+}
+
+body.dark-mode .persona-card p,
+body.dark-mode #profile-description,
+body.dark-mode #profile-stats,
+body.dark-mode #status-label,
+body.dark-mode #mood-label,
+body.dark-mode .memory-empty,
+body.dark-mode .memory-item {
+  color: #e5e7eb;
+}
+
+body.dark-mode #mood-label,
+body.dark-mode #status-label,
+body.dark-mode .chips button,
+body.dark-mode button,
+body.dark-mode #toggle-memory,
+body.dark-mode #clear-memories,
+body.dark-mode .delete-memory {
+  background: rgba(31,41,55,0.82);
+  border-color: rgba(255,255,255,0.14);
+  color: #f9fafb;
+}
+
+body.dark-mode input {
+  background: rgba(15,23,42,0.9);
+  border-color: rgba(255,255,255,0.18);
+  color: #f9fafb;
+}
+
+body.dark-mode input::placeholder {
+  color: #9ca3af;
+}
+
+body.dark-mode .user {
+  background: #f9fafb;
+  color: #111827;
+}
+
+body.dark-mode .memory-item {
+  background: rgba(31,41,55,0.82);
+}
+
+body.dark-mode .assistant.mia {
+  background: rgba(236,72,153,0.28);
+}
+
+body.dark-mode .assistant.leo {
+  background: rgba(239,68,68,0.28);
+}
+
+body.dark-mode .assistant.sage {
+  background: rgba(34,197,94,0.25);
+}
+
+body.dark-mode .assistant.arlo {
+  background: rgba(59,130,246,0.28);
+}
+
+body.dark-mode .persona-avatar,
+body.dark-mode #hero-avatar {
+  background: rgba(15,23,42,0.65);
+  border-color: rgba(255,255,255,0.18);
+}
+
+body.dark-mode #toast {
+  background: rgba(249,250,251,0.95);
+  color: #111827;
+}
+
+/* =========================
+   SELECTION HEADER
+========================= */
+
+.selection-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 680px;
+  margin: 0 auto 30px;
+}
+
+.selection-header h1 {
+  margin: 0;
+}
+
+#theme-toggle-home {
+  width: auto;
+  margin: 0;
+  padding: 10px 16px;
+
+  background: rgba(255,255,255,0.75);
+  border: 1px solid rgba(255,255,255,0.75);
+  border-radius: 12px;
+
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  box-shadow: 0 8px 18px rgba(0,0,0,0.08);
 }

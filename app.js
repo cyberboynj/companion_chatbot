@@ -17,6 +17,12 @@ const toast = document.getElementById("toast");
 const profileDescription = document.getElementById("profile-description");
 const profileStats = document.getElementById("profile-stats");
 
+const toggleMemoryButton = document.getElementById("toggle-memory");
+const memoryList = document.getElementById("memory-list");
+const clearMemoriesButton = document.getElementById("clear-memories");
+const themeToggle = document.getElementById("theme-toggle");
+const themeToggleHome = document.getElementById("theme-toggle-home");
+
 let selectedPersona = "Mia";
 let history = [];
 
@@ -102,6 +108,59 @@ function saveMemory(memories) {
   localStorage.setItem(getMemoryKey(), JSON.stringify(memories));
 }
 
+function renderMemoryList() {
+  const memories = loadMemory();
+
+  memoryList.innerHTML = "";
+
+  if (memories.length === 0) {
+    memoryList.innerHTML = `<p class="memory-empty">No memories saved yet.</p>`;
+    return;
+  }
+
+  memories.forEach((memory, index) => {
+    const memoryItem = document.createElement("div");
+    memoryItem.className = "memory-item";
+
+    const memoryText = document.createElement("span");
+    memoryText.textContent = memory;
+
+    const deleteButton = document.createElement("button");
+    deleteButton.className = "delete-memory";
+    deleteButton.type = "button";
+    deleteButton.textContent = "Delete";
+
+    deleteButton.addEventListener("click", () => {
+      deleteMemory(index);
+    });
+
+    memoryItem.appendChild(memoryText);
+    memoryItem.appendChild(deleteButton);
+    memoryList.appendChild(memoryItem);
+  });
+}
+
+function deleteMemory(index) {
+  const memories = loadMemory();
+
+  memories.splice(index, 1);
+  saveMemory(memories);
+
+  renderMemoryList();
+  updateProfile();
+
+  showToast(`🧠 ${selectedPersona} forgot that memory.`);
+}
+
+function clearAllMemories() {
+  localStorage.removeItem(getMemoryKey());
+
+  renderMemoryList();
+  updateProfile();
+
+  showToast(`🧠 ${selectedPersona}'s memories were cleared.`);
+}
+
 function addMemory(memoryText) {
   const memories = loadMemory();
 
@@ -117,6 +176,9 @@ function addMemory(memoryText) {
 
   memories.push(cleanedMemory);
   saveMemory(memories);
+
+  renderMemoryList();
+  updateProfile();
 
   showToast(`🧠 ${selectedPersona} remembered something new.`);
 }
@@ -170,6 +232,38 @@ function getRelationshipRank(affection) {
 
 function getCurrentPersona() {
   return personas[selectedPersona];
+}
+
+function applyTheme(theme) {
+  if (theme === "dark") {
+    document.body.classList.add("dark-mode");
+
+    if (themeToggle) {
+      themeToggle.textContent = "☀️ Light";
+    }
+
+    if (themeToggleHome) {
+      themeToggleHome.textContent = "☀️ Light";
+    }
+  } else {
+    document.body.classList.remove("dark-mode");
+
+    if (themeToggle) {
+      themeToggle.textContent = "🌙 Dark";
+    }
+
+    if (themeToggleHome) {
+      themeToggleHome.textContent = "🌙 Dark";
+    }
+  }
+
+  localStorage.setItem("theme", theme);
+}
+
+function toggleTheme() {
+  const isDark = document.body.classList.contains("dark-mode");
+
+  applyTheme(isDark ? "light" : "dark");
 }
 
 function showToast(message) {
@@ -556,12 +650,28 @@ clearButton.addEventListener("click", () => {
   console.log(`${selectedPersona}'s chat cleared.`);
 });
 
+toggleMemoryButton.addEventListener("click", () => {
+  memoryList.classList.toggle("hidden");
+
+  if (memoryList.classList.contains("hidden")) {
+    toggleMemoryButton.textContent = "🧠 Show Memories";
+  } else {
+    toggleMemoryButton.textContent = "🧠 Hide Memories";
+    renderMemoryList();
+  }
+});
+
+clearMemoriesButton.addEventListener("click", () => {
+  clearAllMemories();
+});
+
 personaCards.forEach(card => {
   card.addEventListener("click", () => {
     selectedPersona = card.dataset.persona;
 
     loadHistory();
     renderHistory();
+    renderMemoryList();
 
     personaScreen.classList.add("hidden");
     chatScreen.classList.remove("hidden");
@@ -579,10 +689,18 @@ backButton.addEventListener("click", () => {
   document.body.className = "";
 });
 
+themeToggle?.addEventListener("click", toggleTheme);
+themeToggleHome?.addEventListener("click", toggleTheme);
+
 function updateTheme() {
   const persona = getCurrentPersona();
 
   document.body.className = persona.className;
+
+  if (localStorage.getItem("theme") === "dark") {
+    document.body.classList.add("dark-mode");
+  }
+
   chatTitle.textContent = selectedPersona;
 
   heroAvatar.src = persona.avatar;
@@ -590,4 +708,8 @@ function updateTheme() {
 
   updateMoodLabel("default");
   updateStatusLabel();
+  renderMemoryList();
 }
+
+const savedTheme = localStorage.getItem("theme") || "light";
+applyTheme(savedTheme);

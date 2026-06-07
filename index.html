@@ -9,7 +9,13 @@
   <main class="app">
 
     <section id="persona-screen">
-      <h1>Choose Your Companion</h1>
+      <div class="selection-header">
+        <h1>Choose Your Companion</h1>
+
+        <button id="theme-toggle-home" type="button">
+          🌙 Dark
+        </button>
+      </div>
 
       <div class="persona-grid">
         <button class="persona-card mia-card" data-persona="Mia">
@@ -41,6 +47,7 @@
     <section id="chat-screen" class="hidden">
       <div class="chat-topbar">
         <button id="back" type="button">← Change</button>
+        <button id="theme-toggle" type="button">🌙 Dark</button>
       </div>
 
       <div class="companion-hero">
@@ -59,7 +66,10 @@
       </div>
 
       <div id="memory-panel">
-        <button id="toggle-memory" type="button">🧠 Show Memories</button>
+        <div class="memory-header">
+          <button id="toggle-memory" type="button">🧠 Show Memories</button>
+          <button id="clear-memories" type="button">Clear</button>
+        </div>
 
         <div id="memory-list" class="hidden">
           <p class="memory-empty">No memories saved yet.</p>
