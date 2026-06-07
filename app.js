@@ -72,12 +72,14 @@ function saveHistory() {
 }
 
 function loadStats() {
-  return JSON.parse(localStorage.getItem(getStatsKey())) || {
-    affection: 0,
-    messages: 0,
-    unlockedAchievements: [],
-    lastLevel: 1,
-    lastRank: "Acquaintance"
+  const savedStats = JSON.parse(localStorage.getItem(getStatsKey())) || {};
+
+  return {
+    affection: savedStats.affection || 0,
+    messages: savedStats.messages || 0,
+    unlockedAchievements: savedStats.unlockedAchievements || [],
+    lastLevel: savedStats.lastLevel || 1,
+    lastRank: savedStats.lastRank || "Acquaintance"
   };
 }
 
