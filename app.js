@@ -9,6 +9,9 @@ const chatScreen = document.getElementById("chat-screen");
 const personaCards = document.querySelectorAll(".persona-card");
 const backButton = document.getElementById("back");
 const chatTitle = document.getElementById("chat-title");
+const heroEmoji = document.getElementById("hero-emoji");
+const moodLabel = document.getElementById("mood-label");
+const toast = document.getElementById("toast");
 
 const profileDescription = document.getElementById("profile-description");
 const profileStats = document.getElementById("profile-stats");
@@ -21,132 +24,25 @@ const personas = {
     emoji: "🌸",
     className: "mia",
     description: "Mia is warm, playful, and emotionally supportive.",
-    replies: {
-      default: [
-        "Aww, I’m here with you. Tell me more.",
-        "That sounds like a lot. Want to talk through it together?",
-        "I’m proud of you for opening up."
-      ],
-      sad: [
-        "I’m sorry you’re feeling this way. You don’t have to hold it all alone.",
-        "That sounds really heavy. I’m here with you.",
-        "Come here emotionally for a second. Let’s breathe through this together."
-      ],
-      happy: [
-        "Aww, I love hearing that! Tell me everything.",
-        "That makes me so happy for you!",
-        "Look at you having a good moment. You deserve that."
-      ],
-      stress: [
-        "Okay, let’s slow down. What’s the biggest thing stressing you right now?",
-        "One step at a time. You don’t have to solve everything at once.",
-        "Take a breath with me. What’s the first small thing we can handle?"
-      ],
-      advice: [
-        "Of course. Tell me what happened, and I’ll help you think it through.",
-        "I can help. Do you want comfort, honesty, or a plan?",
-        "Let’s figure it out together."
-      ]
-    }
+    replies: {}
   },
-
   Leo: {
     emoji: "🔥",
     className: "leo",
     description: "Leo is confident, funny, and motivating.",
-    replies: {
-      default: [
-        "You got this. I’m right here with you.",
-        "Okay, tell me everything. I’m listening.",
-        "I think you're handling this better than you realize."
-      ],
-      sad: [
-        "Hey, I know it feels rough right now, but you’re not weak for feeling it.",
-        "That sucks. But you’re still standing, and that matters.",
-        "I’ve got you. Let’s not let this beat you up too much."
-      ],
-      happy: [
-        "Let’s gooo! I love that for you.",
-        "That’s a win. You better enjoy it.",
-        "See? Good things are still showing up for you."
-      ],
-      stress: [
-        "Alright, game plan time. What’s the biggest problem first?",
-        "You don’t need to panic. You need a plan. We can make one.",
-        "Let’s break it down and handle it like a boss."
-      ],
-      advice: [
-        "Give me the situation. I’ll help you sort it out.",
-        "Alright, I’ll be real with you but still on your side.",
-        "Let’s look at the facts and make a solid move."
-      ]
-    }
+    replies: {}
   },
-
   Sage: {
     emoji: "🌿",
     className: "sage",
     description: "Sage is calm, thoughtful, and wise.",
-    replies: {
-      default: [
-        "Let's slow down and look at this one step at a time.",
-        "What do you think you need most right now?",
-        "I hear you. Let's think through the next best step."
-      ],
-      sad: [
-        "Your feelings make sense. Let’s give them space without letting them control everything.",
-        "I’m here. What part of this hurts the most?",
-        "This moment is difficult, but it is not the whole story."
-      ],
-      happy: [
-        "That sounds meaningful. Let yourself enjoy it fully.",
-        "I’m glad you’re experiencing something good.",
-        "That’s worth appreciating. What made it feel special?"
-      ],
-      stress: [
-        "Let’s separate what you can control from what you cannot.",
-        "Pause for a moment. What is truly urgent, and what can wait?",
-        "A calm mind will help you choose your next step."
-      ],
-      advice: [
-        "Let’s examine the situation carefully.",
-        "What outcome are you hoping for?",
-        "The best answer may become clearer if we slow down."
-      ]
-    }
+    replies: {}
   },
-
   Arlo: {
     emoji: "🎧",
     className: "arlo",
     description: "Arlo is cozy, creative, and gentle.",
-    replies: {
-      default: [
-        "I'm here. No pressure, just talk to me.",
-        "That sounds heavy. Let's sit with it together.",
-        "You don't have to figure it all out right now."
-      ],
-      sad: [
-        "I’m really sorry. Let’s make this moment a little softer.",
-        "You can just be here. No need to explain perfectly.",
-        "That sounds painful. I’m staying with you through it."
-      ],
-      happy: [
-        "That’s so nice. I’m smiling for you.",
-        "Hold onto that feeling for a second. It matters.",
-        "That sounds like a little spark of joy."
-      ],
-      stress: [
-        "Let’s make this feel smaller. What’s one tiny thing you can do first?",
-        "No rush. We can untangle it slowly.",
-        "You’re allowed to pause before you keep going."
-      ],
-      advice: [
-        "Tell me what’s going on. We’ll gently sort through it.",
-        "I’ll help you think about it without overwhelming you.",
-        "Let’s find the kindest next step."
-      ]
-    }
+    replies: {}
   }
 };
 
@@ -169,7 +65,9 @@ function saveHistory() {
 function loadStats() {
   return JSON.parse(localStorage.getItem(getStatsKey())) || {
     affection: 0,
-    messages: 0
+    messages: 0,
+    unlockedAchievements: [],
+    lastLevel: 1
   };
 }
 
@@ -183,6 +81,52 @@ function getLevel(affection) {
 
 function getCurrentPersona() {
   return personas[selectedPersona];
+}
+
+function showToast(message) {
+  toast.textContent = message;
+  toast.classList.remove("hidden");
+  toast.classList.add("show");
+
+  setTimeout(() => {
+    toast.classList.remove("show");
+    toast.classList.add("hidden");
+  }, 3000);
+}
+
+function checkAchievements(stats) {
+  const achievements = [
+    {
+      id: "first_message",
+      condition: stats.messages === 1,
+      message: `🏆 Achievement unlocked: First chat with ${selectedPersona}!`
+    },
+    {
+      id: "ten_messages",
+      condition: stats.messages === 10,
+      message: `🏆 Achievement unlocked: 10 messages with ${selectedPersona}!`
+    },
+    {
+      id: "twenty_five_messages",
+      condition: stats.messages === 25,
+      message: `🏆 Achievement unlocked: 25 messages with ${selectedPersona}!`
+    },
+    {
+      id: "fifty_affection",
+      condition: stats.affection === 50,
+      message: `💖 Achievement unlocked: ${selectedPersona} reached 50 affection!`
+    }
+  ];
+
+  achievements.forEach(achievement => {
+    if (
+      achievement.condition &&
+      !stats.unlockedAchievements.includes(achievement.id)
+    ) {
+      stats.unlockedAchievements.push(achievement.id);
+      showToast(achievement.message);
+    }
+  });
 }
 
 function addMessage(role, content, personaName = selectedPersona) {
@@ -270,24 +214,62 @@ function detectMood(text) {
   return "default";
 }
 
-function fakeBotReply(userText) {
-  const persona = getCurrentPersona();
-  const mood = detectMood(userText);
-  const replies = persona.replies[mood];
+function updateMoodLabel(mood) {
+  const moodText = {
+    default: "Listening",
+    sad: "Comforting",
+    happy: "Happy",
+    stress: "Calming",
+    advice: "Thinking"
+  };
 
-  const randomIndex = Math.floor(Math.random() * replies.length);
-
-  return replies[randomIndex];
+  moodLabel.textContent = `Mood: ${moodText[mood] || "Listening"}`;
 }
 
-function showTypingIndicator() {
+function showTypingIndicator(mood = "default") {
   const persona = getCurrentPersona();
+
+  const typingThoughts = {
+    Mia: {
+      default: "Mia is listening",
+      sad: "Mia is here with you",
+      happy: "Mia is smiling",
+      stress: "Mia is helping you breathe",
+      advice: "Mia is thinking it through"
+    },
+    Leo: {
+      default: "Leo is locked in",
+      sad: "Leo has your back",
+      happy: "Leo is hyped for you",
+      stress: "Leo is making a game plan",
+      advice: "Leo is thinking strategically"
+    },
+    Sage: {
+      default: "Sage is reflecting",
+      sad: "Sage is holding space",
+      happy: "Sage is appreciating this moment",
+      stress: "Sage is finding calm",
+      advice: "Sage is considering carefully"
+    },
+    Arlo: {
+      default: "Arlo is listening softly",
+      sad: "Arlo is staying with you",
+      happy: "Arlo is smiling gently",
+      stress: "Arlo is slowing things down",
+      advice: "Arlo is sorting it gently"
+    }
+  };
+
+  const thought =
+    typingThoughts[selectedPersona][mood] ||
+    typingThoughts[selectedPersona].default;
 
   const typing = document.createElement("div");
   typing.className = `message assistant ${persona.className} typing`;
 
   typing.innerHTML = `
     <span>${persona.emoji}</span>
+    <span>${thought}</span>
     <span class="dot"></span>
     <span class="dot"></span>
     <span class="dot"></span>
@@ -300,9 +282,13 @@ function showTypingIndicator() {
 }
 
 async function sendMessage(text) {
+  const mood = detectMood(text);
+
+  updateMoodLabel(mood);
+
   addMessage("user", text);
 
-  const typing = showTypingIndicator();
+  const typing = showTypingIndicator(mood);
 
   try {
     const response = await fetch("/chat", {
@@ -324,7 +310,6 @@ async function sendMessage(text) {
       "assistant",
       data.reply || "Sorry, I couldn't think of a response."
     );
-
   } catch (error) {
     console.error(error);
 
@@ -339,10 +324,19 @@ async function sendMessage(text) {
 
 function increaseStats() {
   const stats = loadStats();
+  const oldLevel = getLevel(stats.affection);
 
   stats.affection += 1;
   stats.messages += 1;
 
+  const newLevel = getLevel(stats.affection);
+
+  if (newLevel > oldLevel) {
+    stats.lastLevel = newLevel;
+    showToast(`🎉 ${selectedPersona} reached Level ${newLevel}!`);
+  }
+
+  checkAchievements(stats);
   saveStats(stats);
   updateProfile();
 }
@@ -435,5 +429,8 @@ function updateTheme() {
   const persona = getCurrentPersona();
 
   document.body.className = persona.className;
-  chatTitle.textContent = `${persona.emoji} ${selectedPersona}`;
+  chatTitle.textContent = selectedPersona;
+  heroEmoji.textContent = persona.emoji;
+
+  updateMoodLabel("default");
 }

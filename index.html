@@ -39,14 +39,19 @@
     </section>
 
     <section id="chat-screen" class="hidden">
-      <div class="chat-header">
+      <div class="chat-topbar">
         <button id="back" type="button">← Change</button>
-        <h1 id="chat-title">E-Companion</h1>
       </div>
 
-      <div id="profile-card">
+      <div class="companion-hero">
+        <div id="hero-emoji">🌸</div>
+        <h1 id="chat-title">Mia</h1>
+        <p id="mood-label">Mood: Listening</p>
         <p id="profile-description"></p>
-        <p id="profile-stats"></p>
+
+        <div id="profile-card">
+          <p id="profile-stats"></p>
+        </div>
       </div>
 
       <div id="chat"></div>
@@ -66,6 +71,8 @@
     </section>
 
   </main>
+
+  <div id="toast" class="hidden"></div>
 
   <script src="app.js"></script>
 </body>
