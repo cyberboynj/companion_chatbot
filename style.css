@@ -639,6 +639,76 @@ body.arlo .memory-item {
   border-left: 4px solid #3b82f6;
 }
 
+/* =========================
+   AVATARS (v1.0)
+========================= */
+
+.persona-avatar {
+  width: 76px;
+  height: 76px;
+  object-fit: contain;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  border-radius: 20px;
+  padding: 4px;
+  background: rgba(255,255,255,0.55);
+  box-shadow:
+    inset 0 0 14px rgba(255,255,255,0.5),
+    0 8px 18px rgba(0,0,0,0.12);
+}
+
+.hero-avatar-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+
+#hero-avatar {
+  width: 128px;
+  height: 128px;
+  object-fit: contain;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  border-radius: 28px;
+  padding: 6px;
+  background: rgba(255,255,255,0.58);
+  border: 4px solid rgba(255,255,255,0.85);
+  box-shadow:
+    0 14px 30px rgba(0,0,0,0.16),
+    inset 0 0 18px rgba(255,255,255,0.45);
+  animation: gentlePulse 2.5s ease-in-out infinite;
+}
+
+/* Persona-specific avatar glow */
+
+body.mia #hero-avatar,
+.mia-card .persona-avatar {
+  box-shadow:
+    0 14px 30px rgba(236,72,153,0.25),
+    inset 0 0 18px rgba(255,255,255,0.45);
+}
+
+body.leo #hero-avatar,
+.leo-card .persona-avatar {
+  box-shadow:
+    0 14px 30px rgba(239,68,68,0.25),
+    inset 0 0 18px rgba(255,255,255,0.45);
+}
+
+body.sage #hero-avatar,
+.sage-card .persona-avatar {
+  box-shadow:
+    0 14px 30px rgba(34,197,94,0.25),
+    inset 0 0 18px rgba(255,255,255,0.45);
+}
+
+body.arlo #hero-avatar,
+.arlo-card .persona-avatar {
+  box-shadow:
+    0 14px 30px rgba(59,130,246,0.25),
+    inset 0 0 18px rgba(255,255,255,0.45);
+}
+
 /* Mobile polish */
 @media (max-width: 500px) {
   #chat-screen {

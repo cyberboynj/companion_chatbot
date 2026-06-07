@@ -9,7 +9,7 @@ const chatScreen = document.getElementById("chat-screen");
 const personaCards = document.querySelectorAll(".persona-card");
 const backButton = document.getElementById("back");
 const chatTitle = document.getElementById("chat-title");
-const heroEmoji = document.getElementById("hero-emoji");
+const heroAvatar = document.getElementById("hero-avatar");
 const moodLabel = document.getElementById("mood-label");
 const statusLabel = document.getElementById("status-label");
 const toast = document.getElementById("toast");
@@ -22,27 +22,34 @@ let history = [];
 
 const personas = {
   Mia: {
+    avatar: "images/mia.png",
     emoji: "🌸",
     className: "mia",
     description: "Mia is warm, playful, and emotionally supportive.",
     statuses: ["Online", "Thinking of you", "Feeling cozy", "Ready to listen"],
     replies: {}
   },
+
   Leo: {
+    avatar: "images/leo.png",
     emoji: "🔥",
     className: "leo",
     description: "Leo is confident, funny, and motivating.",
     statuses: ["Online", "Hyped", "Locked in", "Ready to cheer you on"],
     replies: {}
   },
+
   Sage: {
+    avatar: "images/sage.png",
     emoji: "🌿",
     className: "sage",
     description: "Sage is calm, thoughtful, and wise.",
     statuses: ["Online", "Reflecting", "Finding calm", "Ready to advise"],
     replies: {}
   },
+
   Arlo: {
+    avatar: "images/arlo.png",
     emoji: "🎧",
     className: "arlo",
     description: "Arlo is cozy, creative, and gentle.",
@@ -577,7 +584,9 @@ function updateTheme() {
 
   document.body.className = persona.className;
   chatTitle.textContent = selectedPersona;
-  heroEmoji.textContent = persona.emoji;
+
+  heroAvatar.src = persona.avatar;
+  heroAvatar.alt = `${selectedPersona} Avatar`;
 
   updateMoodLabel("default");
   updateStatusLabel();
